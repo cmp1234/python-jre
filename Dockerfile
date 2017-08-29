@@ -20,11 +20,12 @@ RUN { \
 ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk/jre
 ENV PATH $PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin
 
-ENV JAVA_VERSION 8u131
-ENV JAVA_ALPINE_VERSION 8.131.11-r2
+ENV JAVA_VERSION 8u141
+ENV JAVA_ALPINE_VERSION 8.141.15-r0
 
-RUN set -x \
-	&& apk add --no-cache \
-		openjdk8-jre="$JAVA_ALPINE_VERSION" \
-	&& [ "$JAVA_HOME" = "$(docker-java-home)" ]
+RUN set -ex; \
+	sed -i -e 's/v3\.6/edge/g' /etc/apk/repositories; \
+	apk add --no-cache \
+	openjdk8-jre="$JAVA_ALPINE_VERSION"; \
+	sed -i -e 's/edge/v3\.6/g' /etc/apk/repositories; 
 
