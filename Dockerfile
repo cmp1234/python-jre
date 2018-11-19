@@ -1,4 +1,4 @@
-FROM cmp1234/python:2.7.13-alpine3.6
+FROM python:2.7.15-alpine3.8
 
 # A few problems with compiling Java from source:
 #  1. Oracle.  Licensing prevents us from redistributing the official JDK.
@@ -17,15 +17,14 @@ RUN { \
 		echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
 	} > /usr/local/bin/docker-java-home \
 	&& chmod +x /usr/local/bin/docker-java-home
-ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk/jre
+ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
 ENV PATH $PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin
 
-ENV JAVA_VERSION 8u141
-ENV JAVA_ALPINE_VERSION 8.141.15-r0
+ENV JAVA_VERSION 8u181
+ENV JAVA_ALPINE_VERSION 8.181.13-r0
 
-RUN set -ex; \
-	sed -i -e 's/v3\.6/edge/g' /etc/apk/repositories; \
-	apk add --no-cache \
-	openjdk8-jre="$JAVA_ALPINE_VERSION"; \
-	sed -i -e 's/edge/v3\.6/g' /etc/apk/repositories; 
+RUN set -x \
+	&& apk add --no-cache \
+		openjdk8="$JAVA_ALPINE_VERSION" \
+	&& [ "$JAVA_HOME" = "$(docker-java-home)" ]
 
